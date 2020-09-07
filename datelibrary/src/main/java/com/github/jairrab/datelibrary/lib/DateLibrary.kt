@@ -1,20 +1,12 @@
 package com.github.jairrab.datelibrary.lib
 
+import com.github.jairrab.datelibrary.DateFormat.DATE_ISO
+import com.github.jairrab.datelibrary.DateFrequency
+import com.github.jairrab.datelibrary.DatePattern
 import com.github.jairrab.datelibrary.DateUtils
-import com.github.jairrab.datelibrary.DateConstants.DATE_ISO
-import com.github.jairrab.datelibrary.lib.helpers.DatePattern
-import com.github.jairrab.datelibrary.lib.modules.Adders
-import com.github.jairrab.datelibrary.lib.modules.Compute
-import com.github.jairrab.datelibrary.lib.modules.GetBiMonth
-import com.github.jairrab.datelibrary.lib.modules.GetCalendar
-import com.github.jairrab.datelibrary.lib.modules.GetDate
-import com.github.jairrab.datelibrary.lib.modules.GetLong
-import com.github.jairrab.datelibrary.lib.modules.GetMonth
-import com.github.jairrab.datelibrary.lib.modules.GetParameter
-import com.github.jairrab.datelibrary.lib.modules.GetQuarter
-import com.github.jairrab.datelibrary.lib.modules.GetString
-import com.github.jairrab.datelibrary.lib.modules.GetWeek
-import com.github.jairrab.datelibrary.lib.modules.GetYear
+import com.github.jairrab.datelibrary.PeriodSelection
+import com.github.jairrab.datelibrary.lib.modules.*
+import com.github.jairrab.datelibrary.lib.modules.GetParameter.Companion.CALENDAR_QUARTER
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +14,7 @@ internal class DateLibrary(
     private val getCalendar: GetCalendar,
     private val getString: GetString,
     private val getDate: GetDate,
+    private val getDatePattern: GetDatePattern,
     private val getLong: GetLong,
     private val adders: Adders,
     private val compute: Compute,
@@ -32,7 +25,7 @@ internal class DateLibrary(
     private val getWeek: GetWeek,
     private val getParameter: GetParameter
 ) : DateUtils {
-    private var dateFormatPreference = DatePattern.getPattern(DatePattern.LONG)
+    private var dateFormatPreference = getDatePattern.getPattern(DatePattern.LONG)
 
     private val format = "EEEE"
     val friday by lazy { getDateText("2017-01-06 00:00:00", format) }
@@ -97,6 +90,10 @@ internal class DateLibrary(
         return getLong.getTimeInMills(year, month, dayOfMonth)
     }
 
+    override fun getPattern(pattern: DatePattern): String {
+        return getDatePattern.getPattern(pattern)
+    }
+
     override fun getDateTextIso(): String {
         return getString.getToday(this)
     }
@@ -113,7 +110,7 @@ internal class DateLibrary(
         return getString.fromTime(this, date, hour, minute, seconds)
     }
 
-    override fun getDateTextIso(date: String?, frequency: Int): String {
+    override fun getDateTextIso(date: String?, frequency: DateFrequency): String {
         return getString.getDayFromFrequency(this, date, frequency)
     }
 
@@ -133,8 +130,16 @@ internal class DateLibrary(
         return getString.today(this, pattern)
     }
 
+    override fun getDateText(pattern: DatePattern): String {
+        return getDateText(getDatePattern.getPattern(pattern))
+    }
+
     override fun getDateText(date: Date, pattern: String): String {
         return getString.fromDate(this, date, pattern)
+    }
+
+    override fun getDateText(date: Date, pattern: DatePattern): String {
+        return getDateText(date, getDatePattern.getPattern(pattern))
     }
 
     override fun getDateText(timeInMills: Long): String {
@@ -145,6 +150,10 @@ internal class DateLibrary(
         return getString.transform(this, date, pattern)
     }
 
+    override fun getDateText(date: String, pattern: DatePattern): String {
+        return getDateText(date, getDatePattern.getPattern(pattern))
+    }
+
     override fun getDateTextPreferred(date: String): String {
         return getString.transform(this, date, dateFormatPreference)
     }
@@ -153,8 +162,8 @@ internal class DateLibrary(
         return adders.add(this, date, field, num)
     }
 
-    override fun getDateTextIsoAdjusted(date: String, frequency: Int): String {
-        return adders.add(this, date, frequency)
+    override fun getDateTextIsoAdjusted(date: String, dateFrequency: DateFrequency): String {
+        return adders.add(this, date, dateFrequency)
     }
 
     override fun getDateTextIsoAdjustedCurrentTime(date: String): String {
@@ -193,31 +202,31 @@ internal class DateLibrary(
         return getYear.getSinceLastYear(this)
     }
 
-    override fun getDateTextIsoAdjustedYear(dateSelect: Int, c: Calendar): String {
+    override fun getDateTextIsoAdjustedYear(dateSelect: PeriodSelection, c: Calendar): String {
         return getYear.getYearDaysOfDate(this, dateSelect, c)
     }
 
-    override fun getDateTextIsoAdjustedYear(dateSelect: Int, date: String): String {
+    override fun getDateTextIsoAdjustedYear(dateSelect: PeriodSelection, date: String): String {
         return getYear.getYearDaysOfDate(this, dateSelect, date)
     }
 
-    override fun getDateTextIsoAdjustedYear(yearsIncrement: Int, dateSelect: Int): String {
+    override fun getDateTextIsoAdjustedYear(yearsIncrement: Int, dateSelect: PeriodSelection): String {
         return getYear.getYearsDays(this, yearsIncrement, dateSelect)
     }
 
-    override fun getDateTextIsoAdjustedQuarter(dateSelect: Int, c: Calendar): String {
+    override fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection, c: Calendar): String {
         return getQuarter.getQuartersDaysOfDate(this, dateSelect, c)
     }
 
-    override fun getDateTextIsoAdjustedQuarter(dateSelect: Int, date: String): String {
+    override fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection, date: String): String {
         return getQuarter.getQuartersDaysOfDate(this, dateSelect, date)
     }
 
-    override fun getDateTextIsoAdjustedQuarter(dateSelect: Int): String {
+    override fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection): String {
         return getQuarter.getThisQuartersDays(this, dateSelect)
     }
 
-    override fun getDateTextIsoAdjustedQuarterLast(dateSelect: Int): String {
+    override fun getDateTextIsoAdjustedQuarterLast(dateSelect: PeriodSelection): String {
         return getQuarter.getLastQuartersDays(this, dateSelect)
     }
 
@@ -231,7 +240,7 @@ internal class DateLibrary(
 
     override fun getDateTextIsoAdjustedMonth(
         date: String,
-        dateSelect: Int,
+        dateSelect: PeriodSelection,
         useStartMonthSetting: Boolean
     ): String {
         return getMonth.fromString(this, date, dateSelect, useStartMonthSetting)
@@ -239,7 +248,7 @@ internal class DateLibrary(
 
     override fun getDateTextIsoAdjustedMonth(
         c: Calendar,
-        dateSelect: Int,
+        dateSelect: PeriodSelection,
         useStartMonthSetting: Boolean
     ): String {
         return getMonth.fromCalendar(this, c, dateSelect, useStartMonthSetting)
@@ -257,23 +266,26 @@ internal class DateLibrary(
         return getMonth.addMonthsSameDayOfWeek(this, date, addedMonths)
     }
 
-    override fun getDateTextIsoAdjustedBiMonthLast(dateSelect: Int): String {
+    override fun getDateTextIsoAdjustedBiMonthLast(dateSelect: PeriodSelection): String {
         return getBiMonth.getLastBiMonthDays(this, dateSelect)
     }
 
-    override fun getDateTextIsoAdjustedBiMonth(dateSelect: Int): String {
+    override fun getDateTextIsoAdjustedBiMonth(dateSelect: PeriodSelection): String {
         return getBiMonth.getThisBiMonthDays(this, dateSelect)
     }
 
-    override fun getDateTextIsoAdjustedWeek(dateSelect: Int, date: String): String {
+    override fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, date: String): String {
         return getWeek.getWeekDaysOfDate(this, dateSelect, date)
     }
 
-    override fun getDateTextIsoAdjustedWeek(dateSelect: Int, c: Calendar): String {
+    override fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, c: Calendar): String {
         return getWeek.getWeekDaysOfDate(this, dateSelect, c)
     }
 
-    override fun getDateTextIsoAdjustedWeek(dateSelect: Int, weekIncrement: Int): String {
+    override fun getDateTextIsoAdjustedWeek(
+        dateSelect: PeriodSelection,
+        weekIncrement: Int
+    ): String {
         return getWeek.withIncrement(this, dateSelect, weekIncrement)
     }
 
@@ -307,6 +319,10 @@ internal class DateLibrary(
 
     override fun getDateParameter(date: String, parameter: Int): Int {
         return getParameter.getDateParameter(this, date, parameter)
+    }
+
+    override fun getDateParameterQuarter(date: String): Int {
+        return getParameter.getDateParameter(this, date, CALENDAR_QUARTER)
     }
 
     override fun getDaysBetween(from: String, to: String): Int {

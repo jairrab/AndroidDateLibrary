@@ -1,10 +1,12 @@
 package com.github.jairrab.datelibrary.lib.modules
 
+import com.github.jairrab.datelibrary.PeriodSelection
+import com.github.jairrab.datelibrary.PeriodSelection.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import java.util.*
 
 internal class GetBiMonth {
-    fun getLastBiMonthDays(dateLibrary: DateLibrary, dateSelect: Int): String {
+    fun getLastBiMonthDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
@@ -38,14 +40,13 @@ internal class GetBiMonth {
         }
 
         return when (dateSelect) {
-            1 -> dateLibrary.getDateTextIso(firstDay)
-            2 -> dateLibrary.getDateTextIso(secondDay)
-            3 -> dateLibrary.getDateTextIso(endDay)
-            else -> dateLibrary.getDateTextIso(firstDay)
+            START_OF_PERIOD -> dateLibrary.getDateTextIso(firstDay)
+            END_OF_PERIOD -> dateLibrary.getDateTextIso(secondDay)
+            START_OF_NEXT_PERIOD -> dateLibrary.getDateTextIso(endDay)
         }
     }
 
-    fun getThisBiMonthDays(dateLibrary: DateLibrary, dateSelect: Int): String {
+    fun getThisBiMonthDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
@@ -77,10 +78,9 @@ internal class GetBiMonth {
         }
 
         return when (dateSelect) {
-            1 -> dateLibrary.getDateTextIso(firstDay)
-            2 -> dateLibrary.getDateTextIso(secondDay)
-            3 -> dateLibrary.getDateTextIso(endDay)
-            else -> dateLibrary.getDateTextIso(firstDay)
+            START_OF_PERIOD -> dateLibrary.getDateTextIso(firstDay)
+            END_OF_PERIOD -> dateLibrary.getDateTextIso(secondDay)
+            START_OF_NEXT_PERIOD -> dateLibrary.getDateTextIso(endDay)
         }
     }
 }

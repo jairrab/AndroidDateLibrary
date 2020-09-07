@@ -1,10 +1,10 @@
 package com.github.jairrab.datelibrary.lib.modules
 
-import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.DateConstants
-import com.github.jairrab.datelibrary.DateConstants.DATE_ISO
-import com.github.jairrab.datelibrary.Frequency
+import com.github.jairrab.datelibrary.DateFormat
+import com.github.jairrab.datelibrary.DateFormat.DATE_ISO
+import com.github.jairrab.datelibrary.DateFrequency
 import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
+import com.github.jairrab.datelibrary.lib.DateLibrary
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,7 +17,7 @@ internal class GetString(private val isoFormat: CheckIsoFormat) {
     }
 
     fun getTodayTrimmed(dateLibrary: DateLibrary): String = dateLibrary.run {
-        return fromDate(dateLibrary, Date(), DateConstants.DATE_ISO_TRIMMED)
+        return fromDate(dateLibrary, Date(), DateFormat.DATE_ISO_TRIMMED)
     }
 
     fun fromDate(dateLibrary: DateLibrary, date: Date): String = dateLibrary.run {
@@ -29,7 +29,7 @@ internal class GetString(private val isoFormat: CheckIsoFormat) {
     }
 
     fun fromDateTrimmed(dateLibrary: DateLibrary, date: Date): String = dateLibrary.run {
-        return getStringFromDate(date, DateConstants.DATE_ISO_TRIMMED)
+        return getStringFromDate(date, DateFormat.DATE_ISO_TRIMMED)
     }
 
     fun fromLong(dateLibrary: DateLibrary, timeInMills: Long): String = dateLibrary.run {
@@ -49,7 +49,7 @@ internal class GetString(private val isoFormat: CheckIsoFormat) {
     }
 
     fun trim(dateLibrary: DateLibrary, date: String): String = dateLibrary.run {
-        return getStringFromDate(dateLibrary.getDate(date), DateConstants.DATE_ISO_TRIMMED)
+        return getStringFromDate(dateLibrary.getDate(date), DateFormat.DATE_ISO_TRIMMED)
     }
 
     fun fromTime(
@@ -82,31 +82,31 @@ internal class GetString(private val isoFormat: CheckIsoFormat) {
         return getStringFromDate(calendar.time, DATE_ISO)
     }
 
-    fun getDayFromFrequency(dateLibrary: DateLibrary, date: String?, frequency: Int): String {
+    fun getDayFromFrequency(dateLibrary: DateLibrary, date: String?, dateFrequency: DateFrequency): String {
         if (date == null) return getToday(dateLibrary)
-        return when (frequency) {
-            Frequency.DAILY,
-            Frequency.DAILY_DAY_ONLY,
-            Frequency.ACCOUNT_CARD_DAILY -> date
-            Frequency.WEEKLY,
-            Frequency.ACCOUNT_CARD_WEEKLY -> dateLibrary.getDateTextIsoAdjustedWeek(
+        return when (dateFrequency) {
+            DateFrequency.DAILY,
+            DateFrequency.DAILY_DAY_ONLY,
+            DateFrequency.ACCOUNT_CARD_DAILY -> date
+            DateFrequency.WEEKLY,
+            DateFrequency.ACCOUNT_CARD_WEEKLY -> dateLibrary.getDateTextIsoAdjustedWeek(
                 START_OF_PERIOD,
                 dateLibrary.getCalendar(date)
             )
-            Frequency.BI_WEEKLY -> dateLibrary.getDateTextIsoAdjustedWeek(
+            DateFrequency.BI_WEEKLY -> dateLibrary.getDateTextIsoAdjustedWeek(
                 START_OF_PERIOD,
                 dateLibrary.getCalendar(date)
             )
-            Frequency.MONTHLY -> dateLibrary.getDateTextIsoAdjustedMonth(
+            DateFrequency.MONTHLY -> dateLibrary.getDateTextIsoAdjustedMonth(
                 dateLibrary.getCalendar(
                     date
                 ), START_OF_PERIOD
             )
-            Frequency.QUARTERLY -> dateLibrary.getDateTextIsoAdjustedQuarter(
+            DateFrequency.QUARTERLY -> dateLibrary.getDateTextIsoAdjustedQuarter(
                 START_OF_PERIOD,
                 dateLibrary.getCalendar(date)
             )
-            Frequency.ANNUALLY -> dateLibrary.getDateTextIsoAdjustedYear(
+            DateFrequency.ANNUALLY -> dateLibrary.getDateTextIsoAdjustedYear(
                 START_OF_PERIOD,
                 dateLibrary.getCalendar(date)
             )

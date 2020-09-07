@@ -1,7 +1,7 @@
 package com.github.jairrab.datelibrary.lib.modules
 
+import com.github.jairrab.datelibrary.DateFrequency
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.Frequency
 import java.util.*
 
 internal class Adders {
@@ -22,18 +22,21 @@ internal class Adders {
         return addDateToString(date, num, field)
     }
 
-    fun add(dateLibrary: DateLibrary, date: String, frequency: Int): String = dateLibrary.run {
-        return when (frequency) {
-            Frequency.DAILY,
-            Frequency.DAILY_DAY_ONLY,
-            Frequency.ACCOUNT_CARD_DAILY -> addDateToString(date, 1, Calendar.DATE)
-            Frequency.WEEKLY,
-            Frequency.ACCOUNT_CARD_WEEKLY -> addDateToString(date, 1, Calendar.WEEK_OF_YEAR)
-            Frequency.BI_WEEKLY -> addDateToString(date, 2, Calendar.WEEK_OF_YEAR)
-            Frequency.MONTHLY -> addDateToString(date, 1, Calendar.MONTH)
-            Frequency.QUARTERLY -> addDateToString(date, 3, Calendar.MONTH)
-            Frequency.ANNUALLY -> addDateToString(date, 1, Calendar.YEAR)
-            else -> addDateToString(date, 1, Calendar.DATE)
+    fun add(
+        dateLibrary: DateLibrary,
+        date: String,
+        dateFrequency: DateFrequency
+    ): String = dateLibrary.run {
+        return when (dateFrequency) {
+            DateFrequency.DAILY,
+            DateFrequency.DAILY_DAY_ONLY,
+            DateFrequency.ACCOUNT_CARD_DAILY -> addDateToString(date, 1, Calendar.DATE)
+            DateFrequency.WEEKLY,
+            DateFrequency.ACCOUNT_CARD_WEEKLY -> addDateToString(date, 1, Calendar.WEEK_OF_YEAR)
+            DateFrequency.BI_WEEKLY -> addDateToString(date, 2, Calendar.WEEK_OF_YEAR)
+            DateFrequency.MONTHLY -> addDateToString(date, 1, Calendar.MONTH)
+            DateFrequency.QUARTERLY -> addDateToString(date, 3, Calendar.MONTH)
+            DateFrequency.ANNUALLY -> addDateToString(date, 1, Calendar.YEAR)
         }
     }
 

@@ -1,9 +1,8 @@
 package com.github.jairrab.datelibrary.lib.modules
 
+import com.github.jairrab.datelibrary.PeriodSelection
+import com.github.jairrab.datelibrary.PeriodSelection.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.PeriodSelection.END_OF_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_NEXT_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
 import java.util.*
 
 internal class GetQuarter {
@@ -15,7 +14,11 @@ internal class GetQuarter {
         )
     }
 
-    fun getQuartersDaysOfDate(dateLibrary: DateLibrary, dateSelect: Int, c: Calendar): String {
+    fun getQuartersDaysOfDate(
+        dateLibrary: DateLibrary,
+        dateSelect: PeriodSelection,
+        c: Calendar
+    ): String {
         val quarter = c.get(Calendar.MONTH) / 3
 
         val firstDay: Date
@@ -61,15 +64,18 @@ internal class GetQuarter {
             START_OF_PERIOD -> dateLibrary.getDateTextIso(firstDay)
             END_OF_PERIOD -> dateLibrary.getDateTextIso(secondDay)
             START_OF_NEXT_PERIOD -> dateLibrary.getDateTextIso(endDay)
-            else -> dateLibrary.getDateTextIso(firstDay)
         }
     }
 
-    fun getQuartersDaysOfDate(dateLibrary: DateLibrary, dateSelect: Int, date: String): String {
+    fun getQuartersDaysOfDate(
+        dateLibrary: DateLibrary,
+        dateSelect: PeriodSelection,
+        date: String
+    ): String {
         return getQuartersDaysOfDate(dateLibrary, dateSelect, dateLibrary.getCalendar(date))
     }
 
-    fun getLastQuartersDays(dateLibrary: DateLibrary, dateSelect: Int): String {
+    fun getLastQuartersDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
         val c = Calendar.getInstance()
         val quarter = c.get(Calendar.MONTH) / 3
         var firstDay = Date()
@@ -110,11 +116,10 @@ internal class GetQuarter {
             START_OF_PERIOD -> dateLibrary.getDateTextIso(firstDay)
             END_OF_PERIOD -> dateLibrary.getDateTextIso(secondDay)
             START_OF_NEXT_PERIOD -> dateLibrary.getDateTextIso(endDay)
-            else -> dateLibrary.getDateTextIso(firstDay)
         }
     }
 
-    fun getThisQuartersDays(dateLibrary: DateLibrary, dateSelect: Int): String {
+    fun getThisQuartersDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
         val c = Calendar.getInstance()
         val quarter = c.get(Calendar.MONTH) / 3
         var firstDay = Date()
@@ -154,7 +159,6 @@ internal class GetQuarter {
             START_OF_PERIOD -> dateLibrary.getDateTextIso(firstDay)
             END_OF_PERIOD -> dateLibrary.getDateTextIso(secondDay)
             START_OF_NEXT_PERIOD -> dateLibrary.getDateTextIso(endDay)
-            else -> dateLibrary.getDateTextIso(firstDay)
         }
     }
 }

@@ -1,19 +1,7 @@
 package com.github.jairrab.datelibrary
 
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.lib.modules.GetYear
-import com.github.jairrab.datelibrary.lib.modules.Adders
-import com.github.jairrab.datelibrary.lib.modules.CheckIsoFormat
-import com.github.jairrab.datelibrary.lib.modules.Compute
-import com.github.jairrab.datelibrary.lib.modules.GetBiMonth
-import com.github.jairrab.datelibrary.lib.modules.GetCalendar
-import com.github.jairrab.datelibrary.lib.modules.GetDate
-import com.github.jairrab.datelibrary.lib.modules.GetLong
-import com.github.jairrab.datelibrary.lib.modules.GetMonth
-import com.github.jairrab.datelibrary.lib.modules.GetParameter
-import com.github.jairrab.datelibrary.lib.modules.GetQuarter
-import com.github.jairrab.datelibrary.lib.modules.GetString
-import com.github.jairrab.datelibrary.lib.modules.GetWeek
+import com.github.jairrab.datelibrary.lib.modules.*
 import java.util.*
 
 interface DateUtils {
@@ -34,24 +22,29 @@ interface DateUtils {
     fun getTime(date: String): Long
     fun getTime(year: Int, month: Int, dayOfMonth: Int): Long
 
+    fun getPattern(pattern: DatePattern): String
+
     fun getDateTextIso(): String
     fun getDateTextIso(date: Date): String
     fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String
     fun getDateTextIso(date: String, hour: Int, minute: Int, seconds: Int): String
-    fun getDateTextIso(date: String?, frequency: Int): String
+    fun getDateTextIso(date: String?, frequency: DateFrequency): String
 
     fun getDateTextIsoTrimmed(): String
     fun getDateTextIsoTrimmed(date: Date): String
     fun getDateTextIsoTrimmed(date: String): String
 
     fun getDateText(pattern: String): String
+    fun getDateText(pattern: DatePattern): String
     fun getDateText(date: Date, pattern: String): String
+    fun getDateText(date: Date, pattern: DatePattern): String
     fun getDateText(timeInMills: Long): String
     fun getDateText(date: String, pattern: String): String
+    fun getDateText(date: String, pattern: DatePattern): String
     fun getDateTextPreferred(date: String): String
 
     fun getDateTextIsoAdjusted(date: String, field: Int, num: Int): String
-    fun getDateTextIsoAdjusted(date: String, frequency: Int): String
+    fun getDateTextIsoAdjusted(date: String, dateFrequency: DateFrequency): String
     fun getDateTextIsoAdjustedCurrentTime(date: String): String
 
     fun getDateTextIsoEndOfLastYear(): String
@@ -63,30 +56,30 @@ interface DateUtils {
     fun getDateTextIsoStartOfNextMonth(): String
 
     fun getDateTextIsoLastYear(): String
-    fun getDateTextIsoAdjustedYear(dateSelect: Int, c: Calendar): String
-    fun getDateTextIsoAdjustedYear(dateSelect: Int, date: String): String
-    fun getDateTextIsoAdjustedYear(yearsIncrement: Int, dateSelect: Int): String
+    fun getDateTextIsoAdjustedYear(dateSelect: PeriodSelection, c: Calendar): String
+    fun getDateTextIsoAdjustedYear(dateSelect: PeriodSelection, date: String): String
+    fun getDateTextIsoAdjustedYear(yearsIncrement: Int, dateSelect: PeriodSelection): String
 
-    fun getDateTextIsoAdjustedQuarter(dateSelect: Int, c: Calendar): String
-    fun getDateTextIsoAdjustedQuarter(dateSelect: Int, date: String): String
-    fun getDateTextIsoAdjustedQuarter(dateSelect: Int): String
-    fun getDateTextIsoAdjustedQuarterLast(dateSelect: Int): String
+    fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection, c: Calendar): String
+    fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection, date: String): String
+    fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection): String
+    fun getDateTextIsoAdjustedQuarterLast(dateSelect: PeriodSelection): String
 
     fun getDateTextIsoSameDayOfLastMonth(): String
     fun getDateTextIsoAdjustedMonth(monthsIncrement: Int): String
-    fun getDateTextIsoAdjustedMonth(date: String, dateSelect: Int, useStartMonthSetting: Boolean = true): String
-    fun getDateTextIsoAdjustedMonth(c: Calendar, dateSelect: Int, useStartMonthSetting: Boolean = true): String
+    fun getDateTextIsoAdjustedMonth(date: String, dateSelect: PeriodSelection, useStartMonthSetting: Boolean = true): String
+    fun getDateTextIsoAdjustedMonth(c: Calendar, dateSelect: PeriodSelection, useStartMonthSetting: Boolean = true): String
 
     fun getDateTextIsoAdjustedDayOfMonth(date: String, day: Int): String
     fun getDateTextIsoAdjustedToEndOfMonth(date: String): String
     fun getDateTextIsoAdjustedMonthSameDayOfWeek(date: String, addedMonths: Int): String
 
-    fun getDateTextIsoAdjustedBiMonthLast(dateSelect: Int): String
-    fun getDateTextIsoAdjustedBiMonth(dateSelect: Int): String
+    fun getDateTextIsoAdjustedBiMonthLast(dateSelect: PeriodSelection): String
+    fun getDateTextIsoAdjustedBiMonth(dateSelect: PeriodSelection): String
 
-    fun getDateTextIsoAdjustedWeek(dateSelect: Int, date: String): String
-    fun getDateTextIsoAdjustedWeek(dateSelect: Int, c: Calendar): String
-    fun getDateTextIsoAdjustedWeek(dateSelect: Int, weekIncrement: Int): String
+    fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, date: String): String
+    fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, c: Calendar): String
+    fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, weekIncrement: Int): String
 
     fun getMonthIndices(startDate: String?, endDate: String?): List<Int>
     fun getWeekDays(): Array<String>
@@ -97,6 +90,7 @@ interface DateUtils {
     fun getLastDayOfMonth(date: String): Int
     fun getLastDayOfMonthBasedOnPreference(date: String): Int
     fun getDateParameter(date: String, parameter: Int): Int
+    fun getDateParameterQuarter(date: String): Int
     fun getDaysBetween(from: String, to: String): Int
     fun getDaysBetweenExact(from: String, to: String): Double
     fun getDaysBetweenExact(from: Date, to: Date): Double
@@ -118,6 +112,7 @@ interface DateUtils {
                 getCalendar = GetCalendar(isoFormat),
                 getString = GetString(isoFormat),
                 getDate = GetDate(),
+                getDatePattern = GetDatePattern(),
                 getLong = GetLong(),
                 adders = Adders(),
                 compute = Compute(),

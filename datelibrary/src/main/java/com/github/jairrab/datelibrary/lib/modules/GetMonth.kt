@@ -1,10 +1,9 @@
 package com.github.jairrab.datelibrary.lib.modules
 
+import com.github.jairrab.datelibrary.DateFormat
+import com.github.jairrab.datelibrary.PeriodSelection
+import com.github.jairrab.datelibrary.PeriodSelection.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.PeriodSelection.END_OF_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_NEXT_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
-import com.github.jairrab.datelibrary.DateConstants
 import java.util.*
 import java.util.Calendar.*
 
@@ -100,14 +99,10 @@ internal class GetMonth {
         }
     }
 
-    /*fun select(dateSelect: Int): String {
-        return fromCalendar(getInstance(), dateSelect)
-    }*/
-
     fun fromString(
         dateLibrary: DateLibrary,
         date: String,
-        dateSelect: Int,
+        dateSelect: PeriodSelection,
         useStartMonthSetting: Boolean = true
     ): String {
         return fromCalendar(
@@ -121,7 +116,7 @@ internal class GetMonth {
     fun fromCalendar(
         dateLibrary: DateLibrary,
         c: Calendar,
-        dateSelect: Int,
+        dateSelect: PeriodSelection,
         useStartMonthSetting: Boolean = true
     ): String {
         c.set(HOUR_OF_DAY, 0)
@@ -142,7 +137,6 @@ internal class GetMonth {
                 c.add(MONTH, 1)
                 dateLibrary.getDateTextIso(c.time)
             }
-            else -> dateLibrary.getDateTextIso(c.time)
         }
     }
 
@@ -193,7 +187,7 @@ internal class GetMonth {
             c2.add(DATE, -7)
         }
 
-        return dateLibrary.getDateText(c2.time, DateConstants.DATE_ISO)
+        return dateLibrary.getDateText(c2.time, DateFormat.DATE_ISO)
     }
 
     fun getMonthIndices(

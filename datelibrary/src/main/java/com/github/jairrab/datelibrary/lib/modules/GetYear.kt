@@ -1,10 +1,9 @@
 package com.github.jairrab.datelibrary.lib.modules
 
+import com.github.jairrab.datelibrary.DateFormat
+import com.github.jairrab.datelibrary.PeriodSelection
+import com.github.jairrab.datelibrary.PeriodSelection.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.DateConstants
-import com.github.jairrab.datelibrary.PeriodSelection.END_OF_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_NEXT_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
 import java.text.DateFormatSymbols
 import java.util.*
 
@@ -27,7 +26,7 @@ internal class GetYear {
         )
     }
 
-    fun getYearDaysOfDate(dateLibrary: DateLibrary, dateSelect: Int, c: Calendar): String {
+    fun getYearDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, c: Calendar): String {
         c.set(Calendar.MONTH, indexOfMonth(startMonthOfYear, DateFormatSymbols().months))
         c.set(Calendar.DAY_OF_MONTH, 1)
         c.set(Calendar.HOUR_OF_DAY, 0)
@@ -48,16 +47,15 @@ internal class GetYear {
                 c.set(Calendar.DAY_OF_MONTH, 1)
                 dateLibrary.getDateTextIso(c.time)
             }
-            else -> dateLibrary.getDateTextIso(c.time)
         }
     }
 
-    fun getYearDaysOfDate(dateLibrary: DateLibrary, dateSelect: Int, date: String): String {
+    fun getYearDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, date: String): String {
         val calendar = dateLibrary.getCalendar(date)
         return getYearDaysOfDate(dateLibrary, dateSelect, calendar)
     }
 
-    fun getYearsDays(dateLibrary: DateLibrary, yearsIncrement: Int, dateSelect: Int): String {
+    fun getYearsDays(dateLibrary: DateLibrary, yearsIncrement: Int, dateSelect: PeriodSelection): String {
         val firstDay: Date
         val secondDay: Date
 
@@ -79,10 +77,9 @@ internal class GetYear {
         val endDay = c.time
 
         return when (dateSelect) {
-            1 -> dateLibrary.getDateText(firstDay, DateConstants.DATE_ISO)
-            2 -> dateLibrary.getDateText(secondDay, DateConstants.DATE_ISO)
-            3 -> dateLibrary.getDateText(endDay, DateConstants.DATE_ISO)
-            else -> dateLibrary.getDateText(firstDay, DateConstants.DATE_ISO)
+            START_OF_PERIOD -> dateLibrary.getDateText(firstDay, DateFormat.DATE_ISO)
+            END_OF_PERIOD -> dateLibrary.getDateText(secondDay, DateFormat.DATE_ISO)
+            START_OF_NEXT_PERIOD -> dateLibrary.getDateText(endDay, DateFormat.DATE_ISO)
         }
     }
 

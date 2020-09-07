@@ -1,7 +1,8 @@
 package com.github.jairrab.datelibrary.lib.modules
 
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import com.github.jairrab.datelibrary.DateConstants
+import com.github.jairrab.datelibrary.DateFormat
+import com.github.jairrab.datelibrary.PeriodSelection
 import com.github.jairrab.datelibrary.PeriodSelection.END_OF_PERIOD
 import com.github.jairrab.datelibrary.PeriodSelection.START_OF_NEXT_PERIOD
 import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
@@ -10,7 +11,7 @@ import java.util.*
 internal class GetWeek {
     var firstDayOfWeek = Calendar.SUNDAY
 
-    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: Int, date: String): String {
+    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, date: String): String {
         val c = dateLibrary.getCalendar(date)
         val i = firstDayOfWeek
 
@@ -27,11 +28,10 @@ internal class GetWeek {
             START_OF_PERIOD -> dateLibrary.getDateTextIso(firstDay)
             END_OF_PERIOD -> dateLibrary.getDateTextIso(secondDay)
             START_OF_NEXT_PERIOD -> dateLibrary.getDateTextIso(endDay)
-            else -> dateLibrary.getDateTextIso(firstDay)
         }
     }
 
-    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: Int, c: Calendar): String {
+    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, c: Calendar): String {
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
         c.set(Calendar.SECOND, 0)
@@ -51,11 +51,10 @@ internal class GetWeek {
                 c.add(Calendar.DATE, 7)
                 dateLibrary.getDateTextIso(c.time)
             }
-            else -> dateLibrary.getDateTextIso(c.time)
         }
     }
 
-    fun withIncrement(dateLibrary: DateLibrary, dateSelect: Int, weekIncrement: Int): String {
+    fun withIncrement(dateLibrary: DateLibrary, dateSelect: PeriodSelection, weekIncrement: Int): String {
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
@@ -75,10 +74,9 @@ internal class GetWeek {
         val endDay = c.time
 
         return when (dateSelect) {
-            1 -> dateLibrary.getDateText(firstDay, DateConstants.DATE_ISO)
-            2 -> dateLibrary.getDateText(secondDay, DateConstants.DATE_ISO)
-            3 -> dateLibrary.getDateText(endDay, DateConstants.DATE_ISO)
-            else -> dateLibrary.getDateText(firstDay, DateConstants.DATE_ISO)
+            START_OF_PERIOD -> dateLibrary.getDateText(firstDay, DateFormat.DATE_ISO)
+            END_OF_PERIOD -> dateLibrary.getDateText(secondDay, DateFormat.DATE_ISO)
+            START_OF_NEXT_PERIOD -> dateLibrary.getDateText(endDay, DateFormat.DATE_ISO)
         }
     }
 

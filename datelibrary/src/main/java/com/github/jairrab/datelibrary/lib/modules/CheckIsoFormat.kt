@@ -1,6 +1,6 @@
 package com.github.jairrab.datelibrary.lib.modules
 
-import com.github.jairrab.datelibrary.DateConstants
+import com.github.jairrab.datelibrary.DateFormat
 
 class CheckIsoFormat {
     /**
@@ -10,9 +10,9 @@ class CheckIsoFormat {
      * @return true if ISO format
      */
     fun check(format: String): Boolean {
-        return format == DateConstants.DATE_ISO ||
-            format == DateConstants.DATE_ISO_TRIMMED ||
-            format == DateConstants.DATE_ISO_NO_COLON ||
-            format == DateConstants.MATERIAL_CALENDAR_VIEW
+        return format == DateFormat.DATE_ISO ||
+            format == DateFormat.DATE_ISO_TRIMMED ||
+            format == DateFormat.DATE_ISO_NO_COLON ||
+            format == DateFormat.MATERIAL_CALENDAR_VIEW
     }
 }
