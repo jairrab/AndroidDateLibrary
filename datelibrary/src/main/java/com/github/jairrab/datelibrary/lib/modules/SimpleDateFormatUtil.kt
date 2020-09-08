@@ -64,7 +64,7 @@ internal class SimpleDateFormatUtil(
         return isoParser.parse(date) ?: Date()
     }
 
-    fun getDateParser(date: String, pattern: String): Date {
+    fun getDateParsed(date: String, pattern: String): Date {
         return if (checkIsoFormat.check(pattern)) {
             if (pattern == DATE_ISO) {
                 getDateParserIso(date)

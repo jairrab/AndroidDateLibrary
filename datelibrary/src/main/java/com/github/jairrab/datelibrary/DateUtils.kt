@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 interface DateUtils {
-    var dateFormatPreference:String
-    var timeFormatPreference:String
+    var dateFormatPreference: String
+    var timeFormatPreference: String
     var startMonthOfYear: Int
     var startMonthDay: Int
     var firstDayOfWeek: Int
@@ -25,10 +25,9 @@ interface DateUtils {
     fun getDateOffset(date: Date, field: Int, num: Int): Date
 
     fun getTime(): Long
+    fun getTime(date: Date): Long
     fun getTime(date: String): Long
     fun getTime(year: Int, month: Int, dayOfMonth: Int): Long
-
-    fun getDatePattern(pattern: DatePattern): String
 
     fun getTimeText(hour: Int, minute: Int, seconds: Int): String
 
@@ -37,6 +36,7 @@ interface DateUtils {
     fun getDateTextIso(date: String, hour: Int, minute: Int, seconds: Int): String
     fun getDateTextIso(date: String?, frequency: DateFrequency): String
     fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String
+    fun getDateTextIso(timeInMills: Long): String
 
     fun getDateTextIsoTrimmed(): String
     fun getDateTextIsoTrimmed(date: Date): String
@@ -46,12 +46,14 @@ interface DateUtils {
     fun getDateText(pattern: DatePattern): String
     fun getDateText(date: Date, pattern: String): String
     fun getDateText(date: Date, pattern: DatePattern): String
-    fun getDateText(timeInMills: Long): String
     fun getDateText(date: String, pattern: String): String
+    fun getDateText(timeInMills: Long, pattern: String): String
     fun getDateText(date: String, pattern: DatePattern): String
+
     fun getDateTextPreferred(): String
     fun getDateTextPreferred(date: Date): String
     fun getDateTextPreferred(date: String): String
+    fun getDateTextPreferred(timeInMills: Long): String
 
     fun getDateTextIsoOffset(date: String, field: Int, num: Int): String
     fun getDateTextIsoOffset(date: String, dateFrequency: DateFrequency): String
@@ -77,8 +79,10 @@ interface DateUtils {
 
     fun getDateTextIsoSameDayOfLastMonth(): String
     fun getDateTextIsoOffsetMonth(monthsIncrement: Int): String
-    fun getDateTextIsoOffsetMonth(date: String, period: Period, useStartMonth: Boolean = true): String
-    fun getDateTextIsoOffsetMonth(c: Calendar, period: Period, useStartMonth: Boolean = true): String
+    fun getDateTextIsoOffsetMonth(date: String, period: Period): String
+    fun getDateTextIsoOffsetMonth(date: String, period: Period, useStartMonth: Boolean): String
+    fun getDateTextIsoOffsetMonth(c: Calendar, period: Period): String
+    fun getDateTextIsoOffsetMonth(c: Calendar, period: Period, useStartMonth: Boolean): String
     fun getDateTextIsoOffsetDayOfMonth(date: String, day: Int): String
     fun getDateTextIsoOffsetToEndOfMonth(date: String): String
     fun getDateTextIsoOffsetMonthSameDayOfWeek(date: String, addedMonths: Int): String
@@ -104,6 +108,8 @@ interface DateUtils {
     fun getDaysBetweenExact(from: String, to: String): Double
     fun getDaysBetweenExact(from: Date, to: Date): Double
 
+    fun getDatePattern(pattern: DatePattern): String
+
     fun isSameAsCurrentMonth(date: String): Boolean
     fun isFirstDayOfMonth(date: String): Boolean
     fun isFirstDayOfMonthBasedOnPreference(date: String): Boolean
@@ -125,6 +131,7 @@ interface DateUtils {
         ): DateUtils {
             val checkIsoFormat = CheckIsoFormat()
             val simpleDateFormatUtil = SimpleDateFormatUtil(checkIsoFormat)
+            val dateFormatterUtil = DateFormatterUtil(checkIsoFormat)
             return DateLibrary(
                 locale = locale,
                 dateFormatPreference = dateFormatPreference,
@@ -135,14 +142,14 @@ interface DateUtils {
                 adders = Adders(),
                 compute = Compute(),
                 getBiMonth = GetBiMonth(),
-                getCalendar = GetCalendar(simpleDateFormatUtil),
-                getDate = GetDate(checkIsoFormat, simpleDateFormatUtil),
+                getCalendar = GetCalendar(dateFormatterUtil, simpleDateFormatUtil),
+                getDate = GetDate(dateFormatterUtil, simpleDateFormatUtil),
                 getDatePattern = GetDatePattern(),
                 getLong = GetLong(),
                 getMonth = GetMonth(),
                 getParameter = GetParameter(),
                 getQuarter = GetQuarter(),
-                getString = GetString(checkIsoFormat, simpleDateFormatUtil),
+                getString = GetString(dateFormatterUtil, simpleDateFormatUtil),
                 getWeek = GetWeek(),
                 getYear = GetYear(),
                 simpleDateFormatUtil = simpleDateFormatUtil,

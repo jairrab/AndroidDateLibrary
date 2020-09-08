@@ -81,16 +81,16 @@ internal class DateLibrary(
         return getLong.getTimeInMillis()
     }
 
+    override fun getTime(date: Date): Long {
+        return date.time
+    }
+
     override fun getTime(date: String): Long {
         return getLong.getTimeInMills(date, this)
     }
 
     override fun getTime(year: Int, month: Int, dayOfMonth: Int): Long {
         return getLong.getTimeInMills(year, month, dayOfMonth)
-    }
-
-    override fun getDatePattern(pattern: DatePattern): String {
-        return getDatePattern.getPattern(pattern)
     }
 
     override fun getTimeText(hour: Int, minute: Int, seconds: Int): String {
@@ -102,7 +102,7 @@ internal class DateLibrary(
     }
 
     override fun getDateTextIso(date: Date): String {
-        return getString.getDateText(this, date, DATE_ISO)
+        return getDateText(date, DATE_ISO)
     }
 
     override fun getDateTextIso(date: String, hour: Int, minute: Int, seconds: Int): String {
@@ -110,12 +110,15 @@ internal class DateLibrary(
     }
 
     override fun getDateTextIso(date: String?, frequency: DateFrequency): String {
-        val d = date ?: getDateTextIso()
-        return getString.getDateText(this, d, frequency)
+        return getString.getDateText(this, date ?: getDateTextIso(), frequency)
     }
 
     override fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String {
         return getString.getDateText(this, hour, minute, seconds, pattern)
+    }
+
+    override fun getDateTextIso(timeInMills: Long): String {
+        return getDateText(Date(timeInMills), DATE_ISO)
     }
 
     override fun getDateTextIsoTrimmed(): String {
@@ -123,11 +126,11 @@ internal class DateLibrary(
     }
 
     override fun getDateTextIsoTrimmed(date: Date): String {
-        return getString.getDateText(this, date, DATE_ISO_TRIMMED)
+        return getDateText(date, DATE_ISO_TRIMMED)
     }
 
     override fun getDateTextIsoTrimmed(date: String): String {
-        return getString.getDateText(this, getDate(date), DATE_ISO_TRIMMED)
+        return getDateText(getDate(date), DATE_ISO_TRIMMED)
     }
 
     override fun getDateText(pattern: String): String {
@@ -146,12 +149,12 @@ internal class DateLibrary(
         return getDateText(date, getDatePattern.getPattern(pattern))
     }
 
-    override fun getDateText(timeInMills: Long): String {
-        return getString.getDateText(this, timeInMills)
+    override fun getDateText(date: String, pattern: String): String {
+        return getDateText(getDate(date), pattern)
     }
 
-    override fun getDateText(date: String, pattern: String): String {
-        return getString.getDateText(this, getDate(date), pattern)
+    override fun getDateText(timeInMills: Long, pattern: String): String {
+        return getDateText(Date(timeInMills), pattern)
     }
 
     override fun getDateText(date: String, pattern: DatePattern): String {
@@ -167,7 +170,11 @@ internal class DateLibrary(
     }
 
     override fun getDateTextPreferred(date: String): String {
-        return getString.getDateText(this, getDate(date), dateFormatPreference)
+        return getDateText(getDate(date), dateFormatPreference)
+    }
+
+    override fun getDateTextPreferred(timeInMills: Long): String {
+        return getDateText(Date(timeInMills), dateFormatPreference)
     }
 
     override fun getDateTextIsoOffset(date: String, field: Int, num: Int): String {
@@ -222,10 +229,7 @@ internal class DateLibrary(
         return getYear.getYearDaysOfDate(this, period, date)
     }
 
-    override fun getDateTextIsoOffsetYear(
-        yearsIncrement: Int,
-        period: Period
-    ): String {
+    override fun getDateTextIsoOffsetYear(yearsIncrement: Int, period: Period): String {
         return getYear.getYearsDays(this, yearsIncrement, period)
     }
 
@@ -253,21 +257,19 @@ internal class DateLibrary(
         return getMonth.withIncrement(this, monthsIncrement)
     }
 
-    override fun getDateTextIsoOffsetMonth(
-        date: String,
-        period: Period,
-        useStartMonth: Boolean
-    ): String {
-        return getMonth.fromString(this, date, period, useStartMonth)
+    override fun getDateTextIsoOffsetMonth(date: String, period: Period): String {
+        return getDateTextIsoOffsetMonth(date, period, true)
     }
 
-    override fun getDateTextIsoOffsetMonth(
-        c: Calendar,
-        period: Period,
-        useStartMonth: Boolean
-    ): String {
-        return getMonth.fromCalendar(this, c, period, useStartMonth)
+    override fun getDateTextIsoOffsetMonth(date: String, period: Period, useStartMonth: Boolean) =
+        getMonth.fromString(this, date, period, useStartMonth)
+
+    override fun getDateTextIsoOffsetMonth(c: Calendar, period: Period): String {
+        return getDateTextIsoOffsetMonth(c, period, true)
     }
+
+    override fun getDateTextIsoOffsetMonth(c: Calendar, period: Period, useStartMonth: Boolean) =
+        getMonth.fromCalendar(this, c, period, useStartMonth)
 
     override fun getDateTextIsoOffsetDayOfMonth(date: String, day: Int): String {
         return getMonth.setMonthDate(this, date, day)
@@ -347,6 +349,10 @@ internal class DateLibrary(
 
     override fun getDaysBetweenExact(from: Date, to: Date): Double {
         return compute.getDaysBetweenExact(from, to)
+    }
+
+    override fun getDatePattern(pattern: DatePattern): String {
+        return getDatePattern.getPattern(pattern)
     }
 
     override fun isSameAsCurrentMonth(date: String): Boolean {
