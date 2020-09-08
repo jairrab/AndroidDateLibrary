@@ -2,14 +2,19 @@ package com.github.jairrab.datelibrary
 
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import com.github.jairrab.datelibrary.lib.modules.*
+import java.text.DateFormat.LONG
+import java.text.DateFormat.getDateInstance
+import java.text.SimpleDateFormat
 import java.util.*
 
 interface DateUtils {
-    fun updateLocale()
-    fun setDatePatternPreference(pattern: String)
-    fun setStartMonthOfYear(startMonthOfYear: String)
-    fun setStartMonthDay(startMonthDay: Int)
-    fun setFirstDayOfWeek(firstDayOfWeek: Int)
+    var dateFormatPreference:String
+    var timeFormatPreference:String
+    var startMonthOfYear: Int
+    var startMonthDay: Int
+    var firstDayOfWeek: Int
+
+    fun updateLocale(locale: Locale)
 
     fun getCalendar(date: String): Calendar
     fun getCalendar(date: Date): Calendar
@@ -22,13 +27,15 @@ interface DateUtils {
     fun getTime(date: String): Long
     fun getTime(year: Int, month: Int, dayOfMonth: Int): Long
 
-    fun getPattern(pattern: DatePattern): String
+    fun getDatePattern(pattern: DatePattern): String
+
+    fun getTimeText(hour: Int, minute: Int, seconds: Int): String
 
     fun getDateTextIso(): String
     fun getDateTextIso(date: Date): String
-    fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String
     fun getDateTextIso(date: String, hour: Int, minute: Int, seconds: Int): String
     fun getDateTextIso(date: String?, frequency: DateFrequency): String
+    fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String
 
     fun getDateTextIsoTrimmed(): String
     fun getDateTextIsoTrimmed(date: Date): String
@@ -41,6 +48,8 @@ interface DateUtils {
     fun getDateText(timeInMills: Long): String
     fun getDateText(date: String, pattern: String): String
     fun getDateText(date: String, pattern: DatePattern): String
+    fun getDateTextPreferred(): String
+    fun getDateTextPreferred(date: Date): String
     fun getDateTextPreferred(date: String): String
 
     fun getDateTextIsoAdjusted(date: String, field: Int, num: Int): String
@@ -69,7 +78,6 @@ interface DateUtils {
     fun getDateTextIsoAdjustedMonth(monthsIncrement: Int): String
     fun getDateTextIsoAdjustedMonth(date: String, dateSelect: PeriodSelection, useStartMonthSetting: Boolean = true): String
     fun getDateTextIsoAdjustedMonth(c: Calendar, dateSelect: PeriodSelection, useStartMonthSetting: Boolean = true): String
-
     fun getDateTextIsoAdjustedDayOfMonth(date: String, day: Int): String
     fun getDateTextIsoAdjustedToEndOfMonth(date: String): String
     fun getDateTextIsoAdjustedMonthSameDayOfWeek(date: String, addedMonths: Int): String
@@ -106,7 +114,14 @@ interface DateUtils {
     fun isFirstOnOrBeforeEndDate(firsDay: String, endDate: String): Boolean
 
     companion object {
-        fun getInstance(): DateUtils {
+        fun getInstance(
+            dateFormatPreference: String = (getDateInstance(LONG) as SimpleDateFormat).toLocalizedPattern(),
+            timeFormatPreference: String = "HH:mm",
+            startMonthOfYear: Int = 1,
+            startMonthDay: Int = 1,
+            firstDayOfWeek: Int = Calendar.SUNDAY,
+            locale: Locale = Locale.getDefault(),
+        ): DateUtils {
             val isoFormat = CheckIsoFormat()
             return DateLibrary(
                 getCalendar = GetCalendar(isoFormat),
@@ -121,7 +136,13 @@ interface DateUtils {
                 getMonth = GetMonth(),
                 getBiMonth = GetBiMonth(),
                 getWeek = GetWeek(),
-                getParameter = GetParameter()
+                getParameter = GetParameter(),
+                dateFormatPreference = dateFormatPreference,
+                timeFormatPreference = timeFormatPreference,
+                startMonthOfYear = startMonthOfYear,
+                startMonthDay = startMonthDay,
+                firstDayOfWeek = firstDayOfWeek,
+                locale = locale
             )
         }
     }

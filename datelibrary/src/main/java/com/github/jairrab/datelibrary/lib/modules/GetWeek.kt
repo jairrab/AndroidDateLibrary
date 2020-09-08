@@ -9,11 +9,11 @@ import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
 import java.util.*
 
 internal class GetWeek {
-    var firstDayOfWeek = Calendar.SUNDAY
+    //var firstDayOfWeek = Calendar.SUNDAY
 
     fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, date: String): String {
         val c = dateLibrary.getCalendar(date)
-        val i = firstDayOfWeek
+        val i = dateLibrary.firstDayOfWeek
 
         c.add(Calendar.DATE, if (i <= 0) i else i - 7)
         val firstDay = c.time
@@ -37,7 +37,7 @@ internal class GetWeek {
         c.set(Calendar.SECOND, 0)
         c.set(Calendar.MILLISECOND, 0)
 
-        val i = firstDayOfWeek - c.get(Calendar.DAY_OF_WEEK)
+        val i = dateLibrary.firstDayOfWeek - c.get(Calendar.DAY_OF_WEEK)
 
         c.add(Calendar.DATE, if (i <= 0) i else i - 7)
 
@@ -61,7 +61,7 @@ internal class GetWeek {
         c.set(Calendar.SECOND, 0)
         c.set(Calendar.MILLISECOND, 0)
 
-        val i = firstDayOfWeek - c.get(Calendar.DAY_OF_WEEK)
+        val i = dateLibrary.firstDayOfWeek - c.get(Calendar.DAY_OF_WEEK)
 
         c.add(Calendar.DATE, if (i <= 0) i else i - 7)
         c.add(Calendar.DATE, weekIncrement * 7)

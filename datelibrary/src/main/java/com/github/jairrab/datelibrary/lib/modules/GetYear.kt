@@ -4,12 +4,11 @@ import com.github.jairrab.datelibrary.DateFormat
 import com.github.jairrab.datelibrary.PeriodSelection
 import com.github.jairrab.datelibrary.PeriodSelection.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import java.text.DateFormatSymbols
 import java.util.*
 
 internal class GetYear {
-    var startMonthOfYear: String = DateFormatSymbols().months[Calendar.JANUARY]
-    var startMonthDay = 1
+    //var startMonthOfYear: String = DateFormatSymbols().months[Calendar.JANUARY]
+    //var startMonthDay = 1
 
     fun getEndLastYear(dateLibrary: DateLibrary): String {
         return getYearDaysOfDate(
@@ -21,13 +20,21 @@ internal class GetYear {
 
     fun getSinceLastYear(dateLibrary: DateLibrary): String {
         return dateLibrary.getDateTextIsoAdjusted(
-            dateLibrary.getDateTextIsoAdjusted(dateLibrary.getDateTextIsoTrimmed(), Calendar.YEAR, -1),
+            dateLibrary.getDateTextIsoAdjusted(
+                dateLibrary.getDateTextIsoTrimmed(),
+                Calendar.YEAR,
+                -1
+            ),
             Calendar.DATE, 1
         )
     }
 
-    fun getYearDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, c: Calendar): String {
-        c.set(Calendar.MONTH, indexOfMonth(startMonthOfYear, DateFormatSymbols().months))
+    fun getYearDaysOfDate(
+        dateLibrary: DateLibrary,
+        dateSelect: PeriodSelection,
+        c: Calendar
+    ): String {
+        c.set(Calendar.MONTH, dateLibrary.startMonthOfYear)
         c.set(Calendar.DAY_OF_MONTH, 1)
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
@@ -50,19 +57,27 @@ internal class GetYear {
         }
     }
 
-    fun getYearDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, date: String): String {
+    fun getYearDaysOfDate(
+        dateLibrary: DateLibrary,
+        dateSelect: PeriodSelection,
+        date: String
+    ): String {
         val calendar = dateLibrary.getCalendar(date)
         return getYearDaysOfDate(dateLibrary, dateSelect, calendar)
     }
 
-    fun getYearsDays(dateLibrary: DateLibrary, yearsIncrement: Int, dateSelect: PeriodSelection): String {
+    fun getYearsDays(
+        dateLibrary: DateLibrary,
+        yearsIncrement: Int,
+        dateSelect: PeriodSelection
+    ): String {
         val firstDay: Date
         val secondDay: Date
 
         val c = Calendar.getInstance()
         c.set(Calendar.YEAR, c.get(Calendar.YEAR) + yearsIncrement)
-        c.set(Calendar.MONTH, indexOfMonth(startMonthOfYear, DateFormatSymbols().months))
-        c.set(Calendar.DATE, startMonthDay)
+        c.set(Calendar.MONTH, dateLibrary.startMonthOfYear)
+        c.set(Calendar.DATE, dateLibrary.startMonthDay)
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
         c.set(Calendar.SECOND, 0)
@@ -81,14 +96,5 @@ internal class GetYear {
             END_OF_PERIOD -> dateLibrary.getDateText(secondDay, DateFormat.DATE_ISO)
             START_OF_NEXT_PERIOD -> dateLibrary.getDateText(endDay, DateFormat.DATE_ISO)
         }
-    }
-
-    private fun indexOfMonth(month: String?, months: Array<String>): Int {
-        for ((i, m) in months.withIndex()) {
-            if (m == month) {
-                return i
-            }
-        }
-        return 0
     }
 }

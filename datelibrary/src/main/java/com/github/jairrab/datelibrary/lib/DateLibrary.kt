@@ -1,6 +1,7 @@
 package com.github.jairrab.datelibrary.lib
 
 import com.github.jairrab.datelibrary.DateFormat.DATE_ISO
+import com.github.jairrab.datelibrary.DateFormat.DATE_ISO_TRIMMED
 import com.github.jairrab.datelibrary.DateFrequency
 import com.github.jairrab.datelibrary.DatePattern
 import com.github.jairrab.datelibrary.DateUtils
@@ -11,6 +12,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 internal class DateLibrary(
+    override var dateFormatPreference: String,
+    override var timeFormatPreference: String,
+    override var startMonthOfYear: Int,
+    override var startMonthDay: Int,
+    override var firstDayOfWeek: Int,
+    var locale: Locale,
     private val getCalendar: GetCalendar,
     private val getString: GetString,
     private val getDate: GetDate,
@@ -23,9 +30,13 @@ internal class DateLibrary(
     private val getMonth: GetMonth,
     private val getBiMonth: GetBiMonth,
     private val getWeek: GetWeek,
-    private val getParameter: GetParameter
+    private val getParameter: GetParameter,
 ) : DateUtils {
-    private var dateFormatPreference = getDatePattern.getPattern(DatePattern.LONG)
+
+    init {
+        getCalendar.simpleDateFormatLocalized = SimpleDateFormat(DATE_ISO, locale)
+        getString.simpleDateFormatLocalized = SimpleDateFormat(DATE_ISO, locale)
+    }
 
     private val format = "EEEE"
     val friday by lazy { getDateText("2017-01-06 00:00:00", format) }
@@ -36,26 +47,10 @@ internal class DateLibrary(
     val tuesday by lazy { getDateText("2017-01-03 00:00:00", format) }
     val wednesday by lazy { getDateText("2017-01-04 00:00:00", format) }
 
-    override fun updateLocale() {
-        getCalendar.simpleDateFormatLocalized = SimpleDateFormat(DATE_ISO, Locale.getDefault())
-        getString.simpleDateFormatLocalized = SimpleDateFormat(DATE_ISO, Locale.getDefault())
-    }
-
-    override fun setDatePatternPreference(pattern: String) {
-        dateFormatPreference = pattern
-    }
-
-    override fun setStartMonthOfYear(startMonthOfYear: String) {
-        getYear.startMonthOfYear = startMonthOfYear
-    }
-
-    override fun setStartMonthDay(startMonthDay: Int) {
-        getMonth.startMonthDay = startMonthDay
-        getYear.startMonthDay = startMonthDay
-    }
-
-    override fun setFirstDayOfWeek(firstDayOfWeek: Int) {
-        getWeek.firstDayOfWeek = firstDayOfWeek
+    override fun updateLocale(locale: Locale) {
+        this.locale = locale
+        getCalendar.simpleDateFormatLocalized = SimpleDateFormat(DATE_ISO, locale)
+        getString.simpleDateFormatLocalized = SimpleDateFormat(DATE_ISO, locale)
     }
 
     override fun getCalendar(date: String): Calendar {
@@ -71,6 +66,7 @@ internal class DateLibrary(
     }
 
     override fun getDate(date: String?): Date {
+        if (date == null) return Date()
         return getDate.fromString(date)
     }
 
@@ -90,20 +86,20 @@ internal class DateLibrary(
         return getLong.getTimeInMills(year, month, dayOfMonth)
     }
 
-    override fun getPattern(pattern: DatePattern): String {
+    override fun getDatePattern(pattern: DatePattern): String {
         return getDatePattern.getPattern(pattern)
     }
 
+    override fun getTimeText(hour: Int, minute: Int, seconds: Int): String {
+        return getString.fromTime(this, hour, minute, seconds, timeFormatPreference)
+    }
+
     override fun getDateTextIso(): String {
-        return getString.getToday(this)
+        return getDateTextIso(Date())
     }
 
     override fun getDateTextIso(date: Date): String {
-        return getString.fromDate(this, date)
-    }
-
-    override fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String {
-        return getString.fromTime(this, hour, minute, seconds, pattern)
+        return getString.fromDate(this, date, DATE_ISO)
     }
 
     override fun getDateTextIso(date: String, hour: Int, minute: Int, seconds: Int): String {
@@ -111,23 +107,28 @@ internal class DateLibrary(
     }
 
     override fun getDateTextIso(date: String?, frequency: DateFrequency): String {
-        return getString.getDayFromFrequency(this, date, frequency)
+        val d = date ?: getDateTextIso()
+        return getString.getDayFromFrequency(this, d, frequency)
+    }
+
+    override fun getDateTextIso(hour: Int, minute: Int, seconds: Int, pattern: String): String {
+        return getString.fromTime(this, hour, minute, seconds, pattern)
     }
 
     override fun getDateTextIsoTrimmed(): String {
-        return getString.getTodayTrimmed(this)
+        return getDateTextIsoTrimmed(Date())
     }
 
     override fun getDateTextIsoTrimmed(date: Date): String {
-        return getString.fromDateTrimmed(this, date)
+        return getString.fromDate(this, date, DATE_ISO_TRIMMED)
     }
 
     override fun getDateTextIsoTrimmed(date: String): String {
-        return getString.trim(this, date)
+        return getString.fromDate(this, getDate(date), DATE_ISO_TRIMMED)
     }
 
     override fun getDateText(pattern: String): String {
-        return getString.today(this, pattern)
+        return getDateText(Date(), pattern)
     }
 
     override fun getDateText(pattern: DatePattern): String {
@@ -147,15 +148,23 @@ internal class DateLibrary(
     }
 
     override fun getDateText(date: String, pattern: String): String {
-        return getString.transform(this, date, pattern)
+        return getString.fromDate(this, getDate(date), pattern)
     }
 
     override fun getDateText(date: String, pattern: DatePattern): String {
         return getDateText(date, getDatePattern.getPattern(pattern))
     }
 
+    override fun getDateTextPreferred(): String {
+        return getDateTextPreferred(Date())
+    }
+
+    override fun getDateTextPreferred(date: Date): String {
+        return getDateText(date, dateFormatPreference)
+    }
+
     override fun getDateTextPreferred(date: String): String {
-        return getString.transform(this, date, dateFormatPreference)
+        return getString.fromDate(this, getDate(date), dateFormatPreference)
     }
 
     override fun getDateTextIsoAdjusted(date: String, field: Int, num: Int): String {
@@ -210,7 +219,10 @@ internal class DateLibrary(
         return getYear.getYearDaysOfDate(this, dateSelect, date)
     }
 
-    override fun getDateTextIsoAdjustedYear(yearsIncrement: Int, dateSelect: PeriodSelection): String {
+    override fun getDateTextIsoAdjustedYear(
+        yearsIncrement: Int,
+        dateSelect: PeriodSelection
+    ): String {
         return getYear.getYearsDays(this, yearsIncrement, dateSelect)
     }
 

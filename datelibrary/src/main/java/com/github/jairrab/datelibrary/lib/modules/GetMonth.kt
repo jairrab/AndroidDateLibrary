@@ -8,7 +8,7 @@ import java.util.*
 import java.util.Calendar.*
 
 internal class GetMonth {
-    var startMonthDay = 1
+    //var startMonthDay = 1
 
     fun getSameDayLastMonth(dateLibrary: DateLibrary): String {
         return dateLibrary.getDateTextIsoAdjusted(dateLibrary.getDateTextIsoTrimmed(), MONTH, -1)
@@ -16,7 +16,7 @@ internal class GetMonth {
 
     fun withIncrement(dateLibrary: DateLibrary, monthsIncrement: Int): String {
         val todayDate = day(dateLibrary, dateLibrary.getDateTextIso())
-        val useLastMonthStartDate = todayDate < startMonthDay
+        val useLastMonthStartDate = todayDate < dateLibrary.startMonthDay
         val c = getInstance()
 
         return if (useLastMonthStartDate) {
@@ -30,7 +30,7 @@ internal class GetMonth {
 
     fun startOfMonth(dateLibrary: DateLibrary, useStartMonthSetting: Boolean = true): String {
         val todayDate = day(dateLibrary, dateLibrary.getDateTextIso())
-        val useLastMonthStartDate = todayDate < startMonthDay
+        val useLastMonthStartDate = todayDate < dateLibrary.startMonthDay
         val c = getInstance()
 
         return if (useLastMonthStartDate) {
@@ -43,7 +43,7 @@ internal class GetMonth {
 
     fun endOfMonth(dateLibrary: DateLibrary, useStartMonthSetting: Boolean = true): String {
         val todayDate = day(dateLibrary, dateLibrary.getDateTextIso())
-        val useLastMonthStartDate = todayDate < startMonthDay
+        val useLastMonthStartDate = todayDate < dateLibrary.startMonthDay
         val c = getInstance()
 
         return if (useLastMonthStartDate) {
@@ -59,7 +59,7 @@ internal class GetMonth {
         useStartMonthSetting: Boolean = true
     ): String {
         val todayDate = day(dateLibrary, dateLibrary.getDateTextIso())
-        val useLastMonthStartDate = todayDate < startMonthDay
+        val useLastMonthStartDate = todayDate < dateLibrary.startMonthDay
         val c = getInstance()
 
         return if (useLastMonthStartDate) {
@@ -73,7 +73,7 @@ internal class GetMonth {
 
     fun endOfLastMonth(dateLibrary: DateLibrary, useStartMonthSetting: Boolean = true): String {
         val todayDate = day(dateLibrary, dateLibrary.getDateTextIso())
-        val useLastMonthStartDate = todayDate < startMonthDay
+        val useLastMonthStartDate = todayDate < dateLibrary.startMonthDay
         val c = getInstance()
 
         return if (useLastMonthStartDate) {
@@ -87,7 +87,7 @@ internal class GetMonth {
 
     fun startOfNextMonth(dateLibrary: DateLibrary): String {
         val todayDate = day(dateLibrary, dateLibrary.getDateTextIso())
-        val useLastMonthStartDate = todayDate < startMonthDay
+        val useLastMonthStartDate = todayDate < dateLibrary.startMonthDay
         val c = getInstance()
 
         return if (useLastMonthStartDate) {
@@ -124,7 +124,7 @@ internal class GetMonth {
         c.set(SECOND, 0)
         c.set(MILLISECOND, 0)
 
-        c.set(DATE, if (useStartMonthSetting) startMonthDay else 1)
+        c.set(DATE, if (useStartMonthSetting) dateLibrary.startMonthDay else 1)
 
         return when (dateSelect) {
             START_OF_PERIOD -> dateLibrary.getDateTextIso(c.time)
@@ -216,7 +216,7 @@ internal class GetMonth {
     ): Int {
         val dayNum = getDateParameter(dateLibrary, date ?: "", DATE)
 
-        return if (dayNum < startMonthDay) {
+        return if (dayNum < dateLibrary.startMonthDay) {
             val index = getDateParameter(dateLibrary, date ?: "", MONTH) - 1
             if (index == -1) 11 else index
         } else {
@@ -239,7 +239,7 @@ internal class GetMonth {
     }
 
     fun isFirstDayOfMonthBasedOnPreference(dateLibrary: DateLibrary, date: String): Boolean {
-        return getDateParameter(dateLibrary, date, DAY_OF_MONTH) == startMonthDay
+        return getDateParameter(dateLibrary, date, DAY_OF_MONTH) == dateLibrary.startMonthDay
     }
 
     fun getLastDayOfMonth(dateLibrary: DateLibrary, date: String): Int {

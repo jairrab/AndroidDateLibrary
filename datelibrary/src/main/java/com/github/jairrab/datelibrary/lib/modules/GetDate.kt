@@ -9,10 +9,10 @@ internal class GetDate {
     private val simpleDateFormat = SimpleDateFormat(DateFormat.DATE_ISO, Locale.US)
 
     @Synchronized
-    fun fromString(date: String?): Date {
+    fun fromString(date: String): Date {
         return try {
             simpleDateFormat.applyPattern(DateFormat.DATE_ISO)
-            simpleDateFormat.parse(date)
+            simpleDateFormat.parse(date) ?: Date()
         } catch (e: ParseException) {
             Date()
         }
