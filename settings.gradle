@@ -1,3 +1,2 @@
 include ':datelibrary'
-include ':sample'
 rootProject.name = "AndroidDateLibrary"
