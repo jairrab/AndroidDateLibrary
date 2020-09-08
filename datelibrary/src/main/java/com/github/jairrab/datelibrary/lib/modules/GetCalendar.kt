@@ -1,28 +1,15 @@
 package com.github.jairrab.datelibrary.lib.modules
 
-import com.github.jairrab.datelibrary.DateFormat
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import androidx.annotation.RequiresApi
+import com.github.jairrab.datelibrary.DateFormat.ENABLE_DATE_TIME_FORMATTER
 import com.github.jairrab.datelibrary.lib.DateLibrary
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
-internal class GetCalendar(private val isoFormat: CheckIsoFormat) {
-    var simpleDateFormatLocalized = SimpleDateFormat(DateFormat.DATE_ISO, Locale.getDefault())
-    private val simpleDateFormat = SimpleDateFormat(DateFormat.DATE_ISO, Locale.US)
-
-    @Synchronized
-    fun getCalendar(dateLibrary: DateLibrary, date: String): Calendar = dateLibrary.run {
-        val calendar = Calendar.getInstance()
-        return try {
-            simpleDateFormat.applyPattern(DateFormat.DATE_ISO)
-            calendar.time = simpleDateFormat.parse(date) ?: return calendar
-            calendar
-        } catch (e: ParseException) {
-            calendar
-        }
-    }
-
-    @Synchronized
+internal class GetCalendar(
+    private val simpleDateFormatUtil: SimpleDateFormatUtil
+) {
     fun getCalendar(date: Date): Calendar {
         val calendar = Calendar.getInstance()
         calendar.time = date
@@ -34,20 +21,35 @@ internal class GetCalendar(private val isoFormat: CheckIsoFormat) {
         date: String,
         pattern: String
     ): Calendar = dateLibrary.run {
-        val calendar = Calendar.getInstance()
-        return try {
-            if (isoFormat.check(pattern)) {
-                simpleDateFormat.applyPattern(pattern)
-                calendar.time = simpleDateFormat.parse(date)
-                calendar
-            } else {
-                simpleDateFormatLocalized.applyPattern(pattern)
-                calendar.time = simpleDateFormatLocalized.parse(date)
-                calendar
-            }
-        } catch (e: ParseException) {
-            e.printStackTrace()
-            calendar
+        return if (ENABLE_DATE_TIME_FORMATTER && VERSION.SDK_INT >= VERSION_CODES.O) {
+            getDateStringNew(date, pattern)
+        } else {
+            simpleDateFormatUtil.getCalendar(date, pattern)
         }
+    }
+
+    fun getCalendar(
+        dateLibrary: DateLibrary,
+        date: String
+    ): Calendar = dateLibrary.run {
+        return if (ENABLE_DATE_TIME_FORMATTER && VERSION.SDK_INT >= VERSION_CODES.O) {
+            getDateStringNew(date)
+        } else {
+            simpleDateFormatUtil.getCalendar(date)
+        }
+    }
+
+    @RequiresApi(VERSION_CODES.O)
+    private fun DateLibrary.getDateStringNew(date: String): Calendar {
+        val c = Calendar.getInstance()
+        c.time = getDate(date)
+        return c
+    }
+
+    @RequiresApi(VERSION_CODES.O)
+    private fun DateLibrary.getDateStringNew(date: String, pattern: String): Calendar {
+        val c = Calendar.getInstance()
+        c.time = getDate(date, pattern)
+        return c
     }
 }

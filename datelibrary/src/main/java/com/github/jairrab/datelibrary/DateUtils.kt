@@ -21,7 +21,8 @@ interface DateUtils {
     fun getCalendar(date: String, pattern: String): Calendar
 
     fun getDate(date: String?): Date
-    fun getDateAdjusted(date: Date, field: Int, num: Int): Date
+    fun getDate(date: String?, pattern: String): Date
+    fun getDateOffset(date: Date, field: Int, num: Int): Date
 
     fun getTime(): Long
     fun getTime(date: String): Long
@@ -52,9 +53,9 @@ interface DateUtils {
     fun getDateTextPreferred(date: Date): String
     fun getDateTextPreferred(date: String): String
 
-    fun getDateTextIsoAdjusted(date: String, field: Int, num: Int): String
-    fun getDateTextIsoAdjusted(date: String, dateFrequency: DateFrequency): String
-    fun getDateTextIsoAdjustedCurrentTime(date: String): String
+    fun getDateTextIsoOffset(date: String, field: Int, num: Int): String
+    fun getDateTextIsoOffset(date: String, dateFrequency: DateFrequency): String
+    fun getDateTextIsoOffsetCurrentTime(date: String): String
 
     fun getDateTextIsoEndOfLastYear(): String
     fun getDateTextIsoEndOfLastQuarter(): String
@@ -65,29 +66,29 @@ interface DateUtils {
     fun getDateTextIsoStartOfNextMonth(): String
 
     fun getDateTextIsoLastYear(): String
-    fun getDateTextIsoAdjustedYear(dateSelect: PeriodSelection, c: Calendar): String
-    fun getDateTextIsoAdjustedYear(dateSelect: PeriodSelection, date: String): String
-    fun getDateTextIsoAdjustedYear(yearsIncrement: Int, dateSelect: PeriodSelection): String
+    fun getDateTextIsoOffsetYear(period: Period, c: Calendar): String
+    fun getDateTextIsoOffsetYear(period: Period, date: String): String
+    fun getDateTextIsoOffsetYear(yearsIncrement: Int, period: Period): String
 
-    fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection, c: Calendar): String
-    fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection, date: String): String
-    fun getDateTextIsoAdjustedQuarter(dateSelect: PeriodSelection): String
-    fun getDateTextIsoAdjustedQuarterLast(dateSelect: PeriodSelection): String
+    fun getDateTextIsoOffsetQuarter(period: Period, c: Calendar): String
+    fun getDateTextIsoOffsetQuarter(period: Period, date: String): String
+    fun getDateTextIsoOffsetQuarter(period: Period): String
+    fun getDateTextIsoOffsetQuarterLast(period: Period): String
 
     fun getDateTextIsoSameDayOfLastMonth(): String
-    fun getDateTextIsoAdjustedMonth(monthsIncrement: Int): String
-    fun getDateTextIsoAdjustedMonth(date: String, dateSelect: PeriodSelection, useStartMonthSetting: Boolean = true): String
-    fun getDateTextIsoAdjustedMonth(c: Calendar, dateSelect: PeriodSelection, useStartMonthSetting: Boolean = true): String
-    fun getDateTextIsoAdjustedDayOfMonth(date: String, day: Int): String
-    fun getDateTextIsoAdjustedToEndOfMonth(date: String): String
-    fun getDateTextIsoAdjustedMonthSameDayOfWeek(date: String, addedMonths: Int): String
+    fun getDateTextIsoOffsetMonth(monthsIncrement: Int): String
+    fun getDateTextIsoOffsetMonth(date: String, period: Period, useStartMonth: Boolean = true): String
+    fun getDateTextIsoOffsetMonth(c: Calendar, period: Period, useStartMonth: Boolean = true): String
+    fun getDateTextIsoOffsetDayOfMonth(date: String, day: Int): String
+    fun getDateTextIsoOffsetToEndOfMonth(date: String): String
+    fun getDateTextIsoOffsetMonthSameDayOfWeek(date: String, addedMonths: Int): String
 
-    fun getDateTextIsoAdjustedBiMonthLast(dateSelect: PeriodSelection): String
-    fun getDateTextIsoAdjustedBiMonth(dateSelect: PeriodSelection): String
+    fun getDateTextIsoOffsetBiMonthLast(period: Period): String
+    fun getDateTextIsoOffsetBiMonth(dateSelect: Period): String
 
-    fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, date: String): String
-    fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, c: Calendar): String
-    fun getDateTextIsoAdjustedWeek(dateSelect: PeriodSelection, weekIncrement: Int): String
+    fun getDateTextIsoOffsetWeek(period: Period, date: String): String
+    fun getDateTextIsoOffsetWeek(period: Period, c: Calendar): String
+    fun getDateTextIsoOffsetWeek(period: Period, weekIncrement: Int): String
 
     fun getMonthIndices(startDate: String?, endDate: String?): List<Int>
     fun getWeekDays(): Array<String>
@@ -122,27 +123,29 @@ interface DateUtils {
             firstDayOfWeek: Int = Calendar.SUNDAY,
             locale: Locale = Locale.getDefault(),
         ): DateUtils {
-            val isoFormat = CheckIsoFormat()
+            val checkIsoFormat = CheckIsoFormat()
+            val simpleDateFormatUtil = SimpleDateFormatUtil(checkIsoFormat)
             return DateLibrary(
-                getCalendar = GetCalendar(isoFormat),
-                getString = GetString(isoFormat),
-                getDate = GetDate(),
-                getDatePattern = GetDatePattern(),
-                getLong = GetLong(),
-                adders = Adders(),
-                compute = Compute(),
-                getYear = GetYear(),
-                getQuarter = GetQuarter(),
-                getMonth = GetMonth(),
-                getBiMonth = GetBiMonth(),
-                getWeek = GetWeek(),
-                getParameter = GetParameter(),
+                locale = locale,
                 dateFormatPreference = dateFormatPreference,
                 timeFormatPreference = timeFormatPreference,
                 startMonthOfYear = startMonthOfYear,
                 startMonthDay = startMonthDay,
                 firstDayOfWeek = firstDayOfWeek,
-                locale = locale
+                adders = Adders(),
+                compute = Compute(),
+                getBiMonth = GetBiMonth(),
+                getCalendar = GetCalendar(simpleDateFormatUtil),
+                getDate = GetDate(checkIsoFormat, simpleDateFormatUtil),
+                getDatePattern = GetDatePattern(),
+                getLong = GetLong(),
+                getMonth = GetMonth(),
+                getParameter = GetParameter(),
+                getQuarter = GetQuarter(),
+                getString = GetString(checkIsoFormat, simpleDateFormatUtil),
+                getWeek = GetWeek(),
+                getYear = GetYear(),
+                simpleDateFormatUtil = simpleDateFormatUtil,
             )
         }
     }

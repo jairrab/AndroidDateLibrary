@@ -10,4 +10,6 @@ object DateFormat {
     const val MMM = "MMM"
     const val MONTH = "MMMM"
     const val TIME_24_HR = "HH:mm"
+    
+    const val ENABLE_DATE_TIME_FORMATTER = true
 }

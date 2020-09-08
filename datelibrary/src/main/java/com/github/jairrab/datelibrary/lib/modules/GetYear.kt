@@ -1,8 +1,8 @@
 package com.github.jairrab.datelibrary.lib.modules
 
 import com.github.jairrab.datelibrary.DateFormat
-import com.github.jairrab.datelibrary.PeriodSelection
-import com.github.jairrab.datelibrary.PeriodSelection.*
+import com.github.jairrab.datelibrary.Period
+import com.github.jairrab.datelibrary.Period.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import java.util.*
 
@@ -14,13 +14,13 @@ internal class GetYear {
         return getYearDaysOfDate(
             dateLibrary,
             END_OF_PERIOD,
-            dateLibrary.getCalendar(dateLibrary.getDateAdjusted(Date(), Calendar.YEAR, -1))
+            dateLibrary.getCalendar(dateLibrary.getDateOffset(Date(), Calendar.YEAR, -1))
         )
     }
 
     fun getSinceLastYear(dateLibrary: DateLibrary): String {
-        return dateLibrary.getDateTextIsoAdjusted(
-            dateLibrary.getDateTextIsoAdjusted(
+        return dateLibrary.getDateTextIsoOffset(
+            dateLibrary.getDateTextIsoOffset(
                 dateLibrary.getDateTextIsoTrimmed(),
                 Calendar.YEAR,
                 -1
@@ -31,7 +31,7 @@ internal class GetYear {
 
     fun getYearDaysOfDate(
         dateLibrary: DateLibrary,
-        dateSelect: PeriodSelection,
+        dateSelect: Period,
         c: Calendar
     ): String {
         c.set(Calendar.MONTH, dateLibrary.startMonthOfYear)
@@ -59,7 +59,7 @@ internal class GetYear {
 
     fun getYearDaysOfDate(
         dateLibrary: DateLibrary,
-        dateSelect: PeriodSelection,
+        dateSelect: Period,
         date: String
     ): String {
         val calendar = dateLibrary.getCalendar(date)
@@ -69,7 +69,7 @@ internal class GetYear {
     fun getYearsDays(
         dateLibrary: DateLibrary,
         yearsIncrement: Int,
-        dateSelect: PeriodSelection
+        dateSelect: Period
     ): String {
         val firstDay: Date
         val secondDay: Date

@@ -1,12 +1,12 @@
 package com.github.jairrab.datelibrary.lib.modules
 
-import com.github.jairrab.datelibrary.PeriodSelection
-import com.github.jairrab.datelibrary.PeriodSelection.*
+import com.github.jairrab.datelibrary.Period
+import com.github.jairrab.datelibrary.Period.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import java.util.*
 
 internal class GetBiMonth {
-    fun getLastBiMonthDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
+    fun getLastBiMonthDays(dateLibrary: DateLibrary, dateSelect: Period): String {
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
@@ -46,7 +46,7 @@ internal class GetBiMonth {
         }
     }
 
-    fun getThisBiMonthDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
+    fun getThisBiMonthDays(dateLibrary: DateLibrary, dateSelect: Period): String {
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)

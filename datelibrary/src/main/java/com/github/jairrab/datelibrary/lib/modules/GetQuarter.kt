@@ -1,7 +1,7 @@
 package com.github.jairrab.datelibrary.lib.modules
 
-import com.github.jairrab.datelibrary.PeriodSelection
-import com.github.jairrab.datelibrary.PeriodSelection.*
+import com.github.jairrab.datelibrary.Period
+import com.github.jairrab.datelibrary.Period.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import java.util.*
 
@@ -10,13 +10,13 @@ internal class GetQuarter {
         return getQuartersDaysOfDate(
             dateLibrary,
             END_OF_PERIOD,
-            dateLibrary.getCalendar(dateLibrary.getDateAdjusted(Date(), Calendar.MONTH, -3))
+            dateLibrary.getCalendar(dateLibrary.getDateOffset(Date(), Calendar.MONTH, -3))
         )
     }
 
     fun getQuartersDaysOfDate(
         dateLibrary: DateLibrary,
-        dateSelect: PeriodSelection,
+        dateSelect: Period,
         c: Calendar
     ): String {
         val quarter = c.get(Calendar.MONTH) / 3
@@ -69,13 +69,13 @@ internal class GetQuarter {
 
     fun getQuartersDaysOfDate(
         dateLibrary: DateLibrary,
-        dateSelect: PeriodSelection,
+        dateSelect: Period,
         date: String
     ): String {
         return getQuartersDaysOfDate(dateLibrary, dateSelect, dateLibrary.getCalendar(date))
     }
 
-    fun getLastQuartersDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
+    fun getLastQuartersDays(dateLibrary: DateLibrary, dateSelect: Period): String {
         val c = Calendar.getInstance()
         val quarter = c.get(Calendar.MONTH) / 3
         var firstDay = Date()
@@ -119,7 +119,7 @@ internal class GetQuarter {
         }
     }
 
-    fun getThisQuartersDays(dateLibrary: DateLibrary, dateSelect: PeriodSelection): String {
+    fun getThisQuartersDays(dateLibrary: DateLibrary, dateSelect: Period): String {
         val c = Calendar.getInstance()
         val quarter = c.get(Calendar.MONTH) / 3
         var firstDay = Date()

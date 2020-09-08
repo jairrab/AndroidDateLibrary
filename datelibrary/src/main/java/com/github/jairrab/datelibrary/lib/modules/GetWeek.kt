@@ -2,16 +2,16 @@ package com.github.jairrab.datelibrary.lib.modules
 
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import com.github.jairrab.datelibrary.DateFormat
-import com.github.jairrab.datelibrary.PeriodSelection
-import com.github.jairrab.datelibrary.PeriodSelection.END_OF_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_NEXT_PERIOD
-import com.github.jairrab.datelibrary.PeriodSelection.START_OF_PERIOD
+import com.github.jairrab.datelibrary.Period
+import com.github.jairrab.datelibrary.Period.END_OF_PERIOD
+import com.github.jairrab.datelibrary.Period.START_OF_NEXT_PERIOD
+import com.github.jairrab.datelibrary.Period.START_OF_PERIOD
 import java.util.*
 
 internal class GetWeek {
     //var firstDayOfWeek = Calendar.SUNDAY
 
-    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, date: String): String {
+    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: Period, date: String): String {
         val c = dateLibrary.getCalendar(date)
         val i = dateLibrary.firstDayOfWeek
 
@@ -31,7 +31,7 @@ internal class GetWeek {
         }
     }
 
-    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: PeriodSelection, c: Calendar): String {
+    fun getWeekDaysOfDate(dateLibrary: DateLibrary, dateSelect: Period, c: Calendar): String {
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)
         c.set(Calendar.SECOND, 0)
@@ -54,7 +54,7 @@ internal class GetWeek {
         }
     }
 
-    fun withIncrement(dateLibrary: DateLibrary, dateSelect: PeriodSelection, weekIncrement: Int): String {
+    fun withIncrement(dateLibrary: DateLibrary, dateSelect: Period, weekIncrement: Int): String {
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, 0)
         c.set(Calendar.MINUTE, 0)

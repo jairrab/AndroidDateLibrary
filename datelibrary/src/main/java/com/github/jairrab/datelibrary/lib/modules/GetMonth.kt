@@ -1,8 +1,8 @@
 package com.github.jairrab.datelibrary.lib.modules
 
 import com.github.jairrab.datelibrary.DateFormat
-import com.github.jairrab.datelibrary.PeriodSelection
-import com.github.jairrab.datelibrary.PeriodSelection.*
+import com.github.jairrab.datelibrary.Period
+import com.github.jairrab.datelibrary.Period.*
 import com.github.jairrab.datelibrary.lib.DateLibrary
 import java.util.*
 import java.util.Calendar.*
@@ -11,7 +11,7 @@ internal class GetMonth {
     //var startMonthDay = 1
 
     fun getSameDayLastMonth(dateLibrary: DateLibrary): String {
-        return dateLibrary.getDateTextIsoAdjusted(dateLibrary.getDateTextIsoTrimmed(), MONTH, -1)
+        return dateLibrary.getDateTextIsoOffset(dateLibrary.getDateTextIsoTrimmed(), MONTH, -1)
     }
 
     fun withIncrement(dateLibrary: DateLibrary, monthsIncrement: Int): String {
@@ -102,7 +102,7 @@ internal class GetMonth {
     fun fromString(
         dateLibrary: DateLibrary,
         date: String,
-        dateSelect: PeriodSelection,
+        dateSelect: Period,
         useStartMonthSetting: Boolean = true
     ): String {
         return fromCalendar(
@@ -116,7 +116,7 @@ internal class GetMonth {
     fun fromCalendar(
         dateLibrary: DateLibrary,
         c: Calendar,
-        dateSelect: PeriodSelection,
+        dateSelect: Period,
         useStartMonthSetting: Boolean = true
     ): String {
         c.set(HOUR_OF_DAY, 0)
