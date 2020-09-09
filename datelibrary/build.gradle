@@ -1,11 +1,11 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-	//id 'com.github.dcendents.android-maven'
+	id 'com.github.dcendents.android-maven'
 }
 
 group = 'com.github.jairrab'
-version = '1.0'
+version = '1.0.1'
 
 android {
     compileSdkVersion 29
