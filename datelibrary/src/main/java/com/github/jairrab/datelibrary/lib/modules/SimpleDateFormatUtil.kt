@@ -53,12 +53,6 @@ internal class SimpleDateFormatUtil(
         }
     }
 
-    fun getCalendar(date: String): Calendar {
-        val calendar = Calendar.getInstance()
-        calendar.time = getDateParserIso(date)
-        return calendar
-    }
-
     @Synchronized
     fun getDateParserIso(date: String): Date {
         return isoParser.parse(date) ?: Date()

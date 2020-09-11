@@ -2,7 +2,6 @@ package com.github.jairrab.datelibrary.lib.modules
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.github.jairrab.datelibrary.DateFormat.DATE_ISO
 import com.github.jairrab.datelibrary.lib.toDate
 import com.github.jairrab.datelibrary.lib.toLocalTime
 import java.time.LocalDate
@@ -32,19 +31,7 @@ internal class DateFormatterUtil(private val checkIsoFormat: CheckIsoFormat) {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getDateParsed(date: String): Date {
-        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern(DATE_ISO)).toDate
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCalendar(date: String): Calendar  {
-        val c = Calendar.getInstance()
-        c.time = getDateParsed(date)
-        return c
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCalendar(date: String, pattern: String): Calendar  {
+    fun getCalendar(date: String, pattern: String): Calendar {
         val c = Calendar.getInstance()
         c.time = getDateParsed(date, pattern)
         return c

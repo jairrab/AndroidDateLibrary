@@ -4,8 +4,8 @@ plugins {
 	id 'com.github.dcendents.android-maven'
 }
 
-group = 'com.github.jairrab'
-version = '1.0.1'
+group = 'com.github.jairrab.datelibrary'
+version = '1.1.0'
 
 android {
     compileSdkVersion 29
