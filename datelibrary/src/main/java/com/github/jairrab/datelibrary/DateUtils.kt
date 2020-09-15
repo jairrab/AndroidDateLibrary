@@ -44,11 +44,11 @@ interface DateUtils {
 
     fun getDateText(pattern: String): String
     fun getDateText(pattern: DatePattern): String
-    fun getDateText(date: Date, pattern: String): String
     fun getDateText(date: Date, pattern: DatePattern): String
+    fun getDateText(date: String, pattern: DatePattern): String
+    fun getDateText(date: Date, pattern: String): String
     fun getDateText(date: String, pattern: String): String
     fun getDateText(timeInMills: Long, pattern: String): String
-    fun getDateText(date: String, pattern: DatePattern): String
 
     fun getDateTextPreferred(): String
     fun getDateTextPreferred(date: Date): String

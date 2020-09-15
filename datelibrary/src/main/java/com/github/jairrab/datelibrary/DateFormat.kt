@@ -9,6 +9,9 @@ object DateFormat {
     const val MATERIAL_CALENDAR_VIEW = "yyyy-MM"
     const val MMM = "MMM"
     const val MONTH = "MMMM"
+    const val YEAR_MONTH_DAY_SHORT = "yyyy-MM-dd"
+    const val YEAR_MONTH_SHORT = "yyyy-MM"
+    const val MONTH_DAY_SHORT = "MM-dd"
     const val TIME_24_HR = "HH:mm"
     
     const val ENABLE_DATE_TIME_FORMATTER = true

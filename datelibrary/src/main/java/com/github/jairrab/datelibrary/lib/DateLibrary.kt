@@ -1,11 +1,8 @@
 package com.github.jairrab.datelibrary.lib
 
+import com.github.jairrab.datelibrary.*
 import com.github.jairrab.datelibrary.DateFormat.DATE_ISO
 import com.github.jairrab.datelibrary.DateFormat.DATE_ISO_TRIMMED
-import com.github.jairrab.datelibrary.DateFrequency
-import com.github.jairrab.datelibrary.DatePattern
-import com.github.jairrab.datelibrary.DateUtils
-import com.github.jairrab.datelibrary.Period
 import com.github.jairrab.datelibrary.lib.modules.*
 import com.github.jairrab.datelibrary.lib.modules.GetParameter.Companion.CALENDAR_QUARTER
 import java.util.*
@@ -138,15 +135,36 @@ internal class DateLibrary(
     }
 
     override fun getDateText(pattern: DatePattern): String {
-        return getDateText(getDatePattern.getPattern(pattern))
+        return getDateText(Date(), pattern)
+    }
+
+    override fun getDateText(date: Date, pattern: DatePattern): String {
+        return try {
+            getDateText(date, getDatePattern.getPattern(pattern))
+        } catch (e: Exception) {
+            //fallback in case parsing fails
+            when (pattern) {
+                DatePattern.FULL -> getDateTextPreferred(date)
+                DatePattern.LONG -> getDateTextPreferred(date)
+                DatePattern.MEDIUM -> getDateText(date, DateFormat.YEAR_MONTH_DAY_SHORT)
+                DatePattern.SHORT -> getDateText(date, DateFormat.YEAR_MONTH_DAY_SHORT)
+                DatePattern.MONTH -> getDateText(date, DateFormat.MONTH)
+                DatePattern.MONTH_DAY -> getDateText(date, DateFormat.MONTH_DAY_SHORT)
+                DatePattern.MONTH_DAY_SHORT -> getDateText(date, DateFormat.MONTH_DAY_SHORT)
+                DatePattern.MONTH_YEAR -> getDateText(date, DateFormat.YEAR_MONTH_SHORT)
+                DatePattern.MONTH_YEAR_MEDIUM -> getDateText(date, DateFormat.YEAR_MONTH_SHORT)
+                DatePattern.MONTH_YEAR_SHORT -> getDateText(date, DateFormat.YEAR_MONTH_SHORT)
+                DatePattern.WEEKDAY_MONTH_DAY_TIME -> getDateTextPreferred(date)
+            }
+        }
+    }
+
+    override fun getDateText(date: String, pattern: DatePattern): String {
+        return getDateText(getDate(date), pattern)
     }
 
     override fun getDateText(date: Date, pattern: String): String {
         return getString.getDateText(this, date, pattern)
-    }
-
-    override fun getDateText(date: Date, pattern: DatePattern): String {
-        return getDateText(date, getDatePattern.getPattern(pattern))
     }
 
     override fun getDateText(date: String, pattern: String): String {
@@ -155,10 +173,6 @@ internal class DateLibrary(
 
     override fun getDateText(timeInMills: Long, pattern: String): String {
         return getDateText(Date(timeInMills), pattern)
-    }
-
-    override fun getDateText(date: String, pattern: DatePattern): String {
-        return getDateText(date, getDatePattern.getPattern(pattern))
     }
 
     override fun getDateTextPreferred(): String {
