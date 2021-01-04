@@ -345,6 +345,10 @@ internal class DateLibrary(
         return getMonth.getLastDayOfMonthBasedOnPreference(this, date)
     }
 
+    override fun getDateParameter(date: Date, parameter: Int): Int {
+        return getParameter.getDateParameter(this, date, parameter)
+    }
+
     override fun getDateParameter(date: String, parameter: Int): Int {
         return getParameter.getDateParameter(this, date, parameter)
     }

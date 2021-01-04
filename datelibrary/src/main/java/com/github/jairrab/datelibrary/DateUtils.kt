@@ -102,6 +102,7 @@ interface DateUtils {
     fun getCurrentMonth(): Int
     fun getLastDayOfMonth(date: String): Int
     fun getLastDayOfMonthBasedOnPreference(date: String): Int
+    fun getDateParameter(date: Date, parameter: Int): Int
     fun getDateParameter(date: String, parameter: Int): Int
     fun getDateParameterQuarter(date: String): Int
     fun getDaysBetween(from: String, to: String): Int
