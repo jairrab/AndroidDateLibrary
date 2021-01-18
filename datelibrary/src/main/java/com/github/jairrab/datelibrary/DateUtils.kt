@@ -23,6 +23,8 @@ interface DateUtils {
     fun getDate(date: String?): Date
     fun getDate(date: String?, pattern: String): Date
     fun getDateOffset(date: Date, field: Int, num: Int): Date
+    fun getDateTrimmed(date: Date): Date
+    fun getDateTrimmed(time: Long): Date
 
     fun getTime(): Long
     fun getTime(date: Date): Long

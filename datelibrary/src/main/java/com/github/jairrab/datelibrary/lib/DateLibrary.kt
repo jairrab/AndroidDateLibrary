@@ -74,6 +74,14 @@ internal class DateLibrary(
         return adders.add(date, field, num)
     }
 
+    override fun getDateTrimmed(date: Date): Date {
+        return getDate.getDateTrimmed(date)
+    }
+
+    override fun getDateTrimmed(time: Long): Date {
+        return getDate.getDateTrimmed(Date(time))
+    }
+
     override fun getTime(): Long {
         return getLong.getTimeInMillis()
     }
